@@ -1,0 +1,74 @@
+version: '3'
+services:
+  mysql:
+    image: mysql:latest
+    container_name: mysql_saveur_solidaire
+    environment:
+      MYSQL_ROOT_PASSWORD: p@ssw0rd
+      MYSQL_DATABASE: saveur_solidaire
+      MYSQL_USER: saveur_solidaire_user
+      MYSQL_PASSWORD: p@ssw0rd
+    ports:
+      - "3306:3306"
+    networks:
+      - backend-network
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin
+    container_name: phpmyadmin_saveur_solidaire
+    depends_on:
+      - mysql
+    environment:
+      PMA_HOST: mysql
+      PMA_PORT: 3306
+      PMA_USER: saveur_solidaire_user
+      PMA_PASSWORD: p@ssw0rd
+    ports:
+      - "8081:80"
+    networks:
+      - backend-network
+
+  zookeeper:
+    image: wurstmeister/zookeeper
+    container_name: zookeeper_saveur_solidaire
+    ports:
+      - "2181:2181"
+    restart: unless-stopped
+    networks:
+      - backend-network
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    container_name: kafka_saveur_solidaire
+    ports:
+      - "9092:9092"
+    networks:
+      - backend-network
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://localhost:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+
+  backend:
+    restart: always
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: backend_saveur_solidaire
+    ports:
+      - "8080:8080"
+    depends_on:
+      - mysql
+      - kafka
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://mysql:3306/saveur_solidaire?allowPublicKeyRetrieval=true&useSSL=false&serverTimezone=UTC&createDatabaseIfNotExist=true
+      SPRING_DATASOURCE_USERNAME: saveur_solidaire_user
+      SPRING_DATASOURCE_PASSWORD: p@ssw0rd
+      SPRING_KAFKA_BOOTSTRAP_SERVERS: kafka:9092
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.MySQL8Dialect
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    networks:
+      - backend-network
+
+networks:
+  backend-network:
+    driver: bridge

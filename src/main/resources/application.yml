@@ -1,0 +1,48 @@
+spring:
+  sql:
+    init:
+      platform: mysql
+
+  jpa:
+    hibernate:
+      ddl-auto: update
+
+  messages:
+    basename: errorMessage
+    encoding: utf-8
+
+server:
+  port: 8080
+  error:
+    include-message: always
+    include-stacktrace: never
+
+logging:
+  file:
+    name: saveur_solidaire.log
+
+springdoc:
+  api-docs:
+    path: /docs/api
+  swagger-ui:
+    path: /docs
+
+---
+spring:
+  config:
+    activate:
+      on-profile: dev
+
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    url: jdbc:mysql://localhost:8889/dev_saveur_solidaire?useSSL=FALSE&createDatabaseIfNotExist=true
+    username: root
+    password: root
+
+  jpa:
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+
+
