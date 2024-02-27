@@ -1,6 +1,7 @@
 package com.ivoriandev.saveursolidaire.services;
 
 import com.ivoriandev.saveursolidaire.exceptions.BadRequestException;
+import com.ivoriandev.saveursolidaire.exceptions.NotFoundException;
 import com.ivoriandev.saveursolidaire.models.Store;
 import com.ivoriandev.saveursolidaire.models.User;
 import com.ivoriandev.saveursolidaire.models.embedded.Location;
@@ -47,7 +48,7 @@ public class StoreService implements CrudService<Store> {
     @Override
     public Store read(Integer id) {
         return storeRepository.findById(id).orElseThrow(
-                () -> new BadRequestException(String.format("Store with id %d not found", id))
+                () -> new NotFoundException(String.format("Store with id %d not found", id))
         );
     }
 

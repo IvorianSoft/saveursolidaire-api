@@ -1,5 +1,6 @@
 package com.ivoriandev.saveursolidaire.models.base;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -25,6 +26,7 @@ public class BaseEntity implements Serializable {
     @Column(name = "updated_at")
     private Date updatedAt;
 
+    @JsonIgnore
     @Temporal(TemporalType.TIMESTAMP)
     @Column(name = "deleted_at", columnDefinition = "timestamp default null")
     private Date deletedAt;
