@@ -3,11 +3,13 @@ package com.ivoriandev.saveursolidaire.services;
 import com.ivoriandev.saveursolidaire.models.Store;
 import com.ivoriandev.saveursolidaire.models.embedded.Location;
 import com.ivoriandev.saveursolidaire.utils.constants.AppConstantsTest;
+import com.ivoriandev.saveursolidaire.utils.constants.AuthoritiesConstantsTest;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -38,6 +40,7 @@ public class StoreServiceTest {
     }
 
     @Test
+    @WithUserDetails(AuthoritiesConstantsTest.ADMIN)
     public void testGetAllStores() {
         Assert.assertEquals(2, storeService.all().size());
     }
@@ -59,6 +62,7 @@ public class StoreServiceTest {
     }
 
     @Test
+    @WithUserDetails(AuthoritiesConstantsTest.ADMIN)
     public void testCreateStore() {
         //count before create
         int countBeforeCreate = storeService.all().size();
@@ -82,6 +86,7 @@ public class StoreServiceTest {
     }
 
     @Test
+    @WithUserDetails(AuthoritiesConstantsTest.ADMIN)
     public void testUpdateStore() {
         Store store = storeService.read(1);
         store.setName("UPDATED_STORE");
@@ -97,6 +102,7 @@ public class StoreServiceTest {
     }
 
     @Test
+    @WithUserDetails(AuthoritiesConstantsTest.ADMIN)
     public void testDeleteStore() {
         Store store = storeService.create(getValidStore());
 
