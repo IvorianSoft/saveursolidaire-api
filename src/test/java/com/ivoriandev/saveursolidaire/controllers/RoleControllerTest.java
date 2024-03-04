@@ -72,7 +72,7 @@ public class RoleControllerTest {
         Role role = roleService.read(2);
         role.setName("UPDATED_ROLE");
 
-        this.mockMvc.perform(put(BASE_PATH)
+        this.mockMvc.perform(put(BASE_PATH + "/2")
                 .contentType("application/json")
                 .content(TestUtil.convertObjectToJsonBytes(role)))
                 .andExpect(status().isOk())
@@ -83,9 +83,8 @@ public class RoleControllerTest {
     @WithUserDetails(AuthoritiesConstantsTest.ADMIN)
     public void testUpdateRoleWithUserAdminBadRequest() throws Exception {
         Role role = roleService.read(2);
-        role.setId(null);
 
-        this.mockMvc.perform(put(BASE_PATH)
+        this.mockMvc.perform(put(BASE_PATH + "/test")
                 .contentType("application/json")
                 .content(TestUtil.convertObjectToJsonBytes(role)))
                 .andExpect(status().isBadRequest());

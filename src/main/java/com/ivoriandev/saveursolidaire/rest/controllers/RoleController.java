@@ -46,7 +46,7 @@ public class RoleController {
     @Operation(summary = "Update a role")
     @PutMapping(value = "/{id}", consumes = {"application/json"}, produces = {"application/json;charset=UTF-8"})
     @PreAuthorize("hasAnyRole('"+ AuthoritiesConstants.ADMIN +"')")
-    public ResponseEntity<Role> update(@RequestBody @Validated Role role, @RequestParam("id") Integer id) {
+    public ResponseEntity<Role> update(@RequestBody @Validated Role role, @PathVariable("id") Integer id) {
         return ResponseEntity.ok(roleService.update(id, role));
     }
 
