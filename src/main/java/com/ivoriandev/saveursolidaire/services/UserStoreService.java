@@ -34,6 +34,8 @@ public class UserStoreService {
     }
 
     public UserStore getOneByUserIdAndStoreId(User user, Store store) {
+        if (user == null || store == null)
+            return null;
         return userStoreRepository.findFirstByUserIdAndStoreIdAndIsActiveTrue(user.getId(), store.getId());
     }
 }

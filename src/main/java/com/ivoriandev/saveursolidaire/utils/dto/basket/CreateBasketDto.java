@@ -24,6 +24,5 @@ public class CreateBasketDto {
     @NotNull(message = "Please provide if client must be prepared bag or not")
     String note;
     @NotNull
-    @NotEmpty
     Integer storeId;
 }

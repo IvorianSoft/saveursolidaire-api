@@ -38,6 +38,10 @@ public class BasketService implements CrudService<Basket> {
         return basketRepository.findAll();
     }
 
+    public List<Basket> allByStore(Integer storeId) {
+        return basketRepository.findAllByStoreId(storeId);
+    }
+
     @Override
     public Basket read(Integer id) {
         return basketRepository.findById(id).orElseThrow(
@@ -66,5 +70,11 @@ public class BasketService implements CrudService<Basket> {
     public void delete(Integer id) {
         Basket basket = read(id);
         basketRepository.delete(basket);
+    }
+
+    public Basket updateActiveStatus(Integer id) {
+        Basket basket = read(id);
+        basket.setIsActive(!basket.getIsActive());
+        return basketRepository.save(basket);
     }
 }

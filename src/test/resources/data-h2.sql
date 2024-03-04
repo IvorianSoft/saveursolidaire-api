@@ -8,6 +8,7 @@ INSERT INTO roles (name) VALUES ('SELLER');
 -- USER
 INSERT INTO users (name, email, contact, password, is_active, role_id) VALUES ('ADMIN', 'admin@saveursolidaire.com', '0123456789', '$2a$10$XWIILyGo6l9W/Lkac91rvOZNV/Qfz33U0H1RNOJ47uLcW8HL0Vxzq', 1, 1);
 INSERT INTO users (name, email, contact, password, is_active, role_id) VALUES ('USER', 'user@saveursolidaire.com', '0223456789', '$2a$10$XWIILyGo6l9W/Lkac91rvOZNV/Qfz33U0H1RNOJ47uLcW8HL0Vxzq', 1, 2);
+INSERT INTO users (name, email, contact, password, is_active, role_id) VALUES ('SELLER', 'seller@saveursolidaire.com', '0323456789', '$2a$10$XWIILyGo6l9W/Lkac91rvOZNV/Qfz33U0H1RNOJ47uLcW8HL0Vxzq', 1, 5);
 
 -- STORE
 INSERT INTO stores (name, contact, description, is_active, address, city, country, postal_code, complement, latitude, longitude) VALUES ('STORE', '0123456789', 'DESCRIPTION', 1, 'ADDRESS', 'CITY', 'COUNTRY', '00000', 'COMPLEMENT', 1.0, 1.0);

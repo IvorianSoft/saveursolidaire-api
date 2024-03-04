@@ -84,8 +84,13 @@ public class BasketServiceTest {
         List<Basket> baskets = basketService.all();
 
         assertEquals(1, baskets.size());
+    }
 
+    @Test
+    public void testGetAllBasketsByStore() {
+        List<Basket> baskets = basketService.allByStore(1);
 
+        assertEquals(1, baskets.size());
     }
 
     @Test
