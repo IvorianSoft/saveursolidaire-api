@@ -50,7 +50,7 @@ public class AuthServiceTest {
 
     private SellerRegisterDto getValidSellerRegisterDto() {
         SellerRegisterDto sellerRegisterDto = new SellerRegisterDto();
-        sellerRegisterDto.setEmail("seller@saveursolidaire.com");
+        sellerRegisterDto.setEmail("seller1@saveursolidaire.com");
         sellerRegisterDto.setName("Seller");
         sellerRegisterDto.setPassword("P@ssw0rd");
         sellerRegisterDto.setContact("0123456788");
