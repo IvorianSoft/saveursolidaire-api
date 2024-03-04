@@ -1,6 +1,7 @@
 package com.ivoriandev.saveursolidaire.services;
 
 import com.ivoriandev.saveursolidaire.exceptions.ConflictException;
+import com.ivoriandev.saveursolidaire.repositories.StoreRepository;
 import com.ivoriandev.saveursolidaire.utils.constants.AppConstantsTest;
 import com.ivoriandev.saveursolidaire.utils.constants.AuthoritiesConstantsTest;
 import com.ivoriandev.saveursolidaire.utils.dto.auth.AuthenticationDto;
@@ -28,7 +29,7 @@ public class AuthServiceTest {
     private UserService userService;
 
     @Autowired
-    private StoreService storeService;
+    private StoreRepository storeRepository;
 
     private UserRegisterDto getValidUserRegisterDto() {
         UserRegisterDto userRegisterDto = new UserRegisterDto();
@@ -100,7 +101,7 @@ public class AuthServiceTest {
     @Test
     public void testRegisterSeller() {
         int countBeforeCreate = userService.all().size();
-        int countStoreBeforeCreate = storeService.all().size();
+        int countStoreBeforeCreate = storeRepository.findAll().size();
 
         AuthenticationResponse authenticationResponse = authService.registerSeller(getValidSellerRegisterDto());
 
@@ -108,7 +109,7 @@ public class AuthServiceTest {
         Assert.assertNotNull(authenticationResponse.getToken());
         Assert.assertEquals(3, authenticationResponse.getToken().split("\\.").length);
         Assert.assertEquals(countBeforeCreate + 1, userService.all().size());
-        Assert.assertEquals(countStoreBeforeCreate + 1, storeService.all().size());
+        Assert.assertEquals(countStoreBeforeCreate + 1, storeRepository.findAll().size());
     }
 
     @Test
