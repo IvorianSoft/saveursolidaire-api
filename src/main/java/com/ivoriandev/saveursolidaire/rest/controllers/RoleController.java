@@ -44,10 +44,10 @@ public class RoleController {
     }
 
     @Operation(summary = "Update a role")
-    @PutMapping(value = "", consumes = {"application/json"}, produces = {"application/json;charset=UTF-8"})
+    @PutMapping(value = "/{id}", consumes = {"application/json"}, produces = {"application/json;charset=UTF-8"})
     @PreAuthorize("hasAnyRole('"+ AuthoritiesConstants.ADMIN +"')")
-    public ResponseEntity<Role> update(@RequestBody @Validated Role role) {
-        return ResponseEntity.ok(roleService.update(role));
+    public ResponseEntity<Role> update(@RequestBody @Validated Role role, @RequestParam("id") Integer id) {
+        return ResponseEntity.ok(roleService.update(id, role));
     }
 
     @Operation(summary = "Delete a role by id")

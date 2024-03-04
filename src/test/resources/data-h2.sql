@@ -14,3 +14,6 @@ INSERT INTO stores (name, contact, description, is_active, address, city, countr
 
 -- USER_STORE
 INSERT INTO user_store (user_id, store_id, is_active) VALUES (1, 1, 1);
+
+-- BASKET
+INSERT INTO baskets (name, description, initial_quantity, quantity, price, note, is_active, store_id) VALUES ('BASKET', 'DESCRIPTION', 1, 1, 100, 'NOTE', 1, 1);

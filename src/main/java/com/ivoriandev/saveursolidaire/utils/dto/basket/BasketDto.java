@@ -2,6 +2,7 @@ package com.ivoriandev.saveursolidaire.utils.dto.basket;
 
 import com.ivoriandev.saveursolidaire.models.Basket;
 import com.ivoriandev.saveursolidaire.utils.dto.file.FileDto;
+import com.ivoriandev.saveursolidaire.utils.dto.store.StoreDto;
 import lombok.*;
 
 import java.io.Serializable;
@@ -27,4 +28,5 @@ public class BasketDto implements Serializable {
     FileDto image;
     String note;
     Boolean isActive;
+    StoreDto store;
 }

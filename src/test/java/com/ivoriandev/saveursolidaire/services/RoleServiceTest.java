@@ -54,7 +54,7 @@ public class RoleServiceTest {
         Role role = roleService.read(4);
         role.setName("UPDATED_ROLE");
 
-        Role updatedRole = roleService.update(role);
+        Role updatedRole = roleService.update(role.getId(), role);
 
         assertEquals("UPDATED_ROLE", updatedRole.getName());
     }

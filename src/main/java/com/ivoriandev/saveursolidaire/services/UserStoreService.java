@@ -24,4 +24,16 @@ public class UserStoreService {
 
         userStoreRepository.save(userStore);
     }
+
+    public List<UserStore> allByUserId(User user) {
+        return userStoreRepository.findAllByUserIdAndIsActiveTrue(user.getId());
+    }
+
+    public List<UserStore> allByStoreId(Store store) {
+        return userStoreRepository.findAllByStoreIdAndIsActiveTrue(store.getId());
+    }
+
+    public UserStore getOneByUserIdAndStoreId(User user, Store store) {
+        return userStoreRepository.findFirstByUserIdAndStoreIdAndIsActiveTrue(user.getId(), store.getId());
+    }
 }

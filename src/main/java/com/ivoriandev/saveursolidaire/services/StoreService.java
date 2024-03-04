@@ -4,6 +4,7 @@ import com.ivoriandev.saveursolidaire.exceptions.BadRequestException;
 import com.ivoriandev.saveursolidaire.exceptions.NotFoundException;
 import com.ivoriandev.saveursolidaire.models.Store;
 import com.ivoriandev.saveursolidaire.models.User;
+import com.ivoriandev.saveursolidaire.models.UserStore;
 import com.ivoriandev.saveursolidaire.models.embedded.Location;
 import com.ivoriandev.saveursolidaire.repositories.StoreRepository;
 import com.ivoriandev.saveursolidaire.services.interfaces.CrudService;
@@ -11,6 +12,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -42,7 +45,16 @@ public class StoreService implements CrudService<Store> {
 
     @Override
     public List<Store> all() {
-        return storeRepository.findAll();
+        //check if the user is an admin or a seller
+        if (userService.isCurrentUserAdmin()) {
+            return storeRepository.findAll();
+        }
+
+        Set<Integer> storeIds = userStoreService.allByUserId(userService.getCurrentUser()).stream()
+                .map(UserStore::getStore)
+                .map(Store::getId)
+                .collect(Collectors.toSet());
+        return storeRepository.findAllByIdIn(storeIds);
     }
 
     @Override
@@ -53,8 +65,18 @@ public class StoreService implements CrudService<Store> {
     }
 
     @Override
-    public Store update(Store store) {
-        Store existingStore = read(store.getId());
+    public Store update(Integer id, Store store) {
+        Store existingStore = read(id);
+
+        if (!userService.isCurrentUserAdmin()) {
+            User user = userService.getCurrentUser();
+            UserStore userStore = userStoreService.getOneByUserIdAndStoreId(user, existingStore);
+            if (userStore == null) {
+                throw new BadRequestException(String.format(
+                        "This user is not affiliated with this store %s and cannot update it", existingStore.getId()
+                ));
+            }
+        }
 
         existingStore.setName(store.getName());
         existingStore.setContact(store.getContact());

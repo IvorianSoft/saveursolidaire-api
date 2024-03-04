@@ -88,7 +88,7 @@ public class StoreServiceTest {
         store.setContact("9876543210");
         store.setDescription("UPDATED_DESCRIPTION");
 
-        Store updatedStore = storeService.update(store);
+        Store updatedStore = storeService.update(store.getId(), store);
 
         Assert.assertEquals("UPDATED_STORE", updatedStore.getName());
         Assert.assertEquals("9876543210", updatedStore.getContact());

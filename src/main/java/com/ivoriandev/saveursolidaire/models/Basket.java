@@ -1,6 +1,5 @@
 package com.ivoriandev.saveursolidaire.models;
 
-import com.ivoriandev.saveursolidaire.models.File;
 import com.ivoriandev.saveursolidaire.models.base.BaseEntity;
 import jakarta.persistence.*;
 import lombok.*;
@@ -42,4 +41,8 @@ public class Basket extends BaseEntity {
 
     @Column(name = "is_active", nullable = false)
     private Boolean isActive;
+
+    @ManyToOne
+    @JoinColumn(name = "store_id", referencedColumnName = "id")
+    private Store store;
 }

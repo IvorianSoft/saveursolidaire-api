@@ -43,12 +43,8 @@ public class RoleService implements CrudService<Role> {
     }
 
     @Override
-    public Role update(Role role) {
-        if (role.getId() == null) {
-            throw new BadRequestException("Role id is required");
-        }
-
-        Role existingRole = read(role.getId());
+    public Role update(Integer id, Role role) {
+        Role existingRole = read(id);
         existingRole.setName(role.getName().toUpperCase());
         return roleRepository.save(existingRole);
     }

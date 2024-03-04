@@ -10,10 +10,7 @@ public class Utilities {
     public static Date getCurrentDate(){return new Date();}
 
     public static String getAuthenticateUserName(){
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication != null && !(authentication instanceof AnonymousAuthenticationToken)) {
-            return authentication.getName();
-        }
-        return null;
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        return (auth != null && !(auth instanceof AnonymousAuthenticationToken)) ? auth.getName() : null;
     }
 }
