@@ -5,6 +5,7 @@ import com.ivoriandev.saveursolidaire.services.RoleService;
 import com.ivoriandev.saveursolidaire.utils.TestUtil;
 import com.ivoriandev.saveursolidaire.utils.constants.AppConstantsTest;
 import com.ivoriandev.saveursolidaire.utils.constants.AuthoritiesConstantsTest;
+import jakarta.transaction.Transactional;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @RunWith(SpringRunner.class)
 @ActiveProfiles(profiles = AppConstantsTest.TEST_PROFILE)
 @AutoConfigureMockMvc
+@Transactional
 public class RoleControllerTest {
     private static final String BASE_PATH = API_BASE_URL_V1 + "/roles";
 

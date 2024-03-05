@@ -7,10 +7,10 @@ import com.ivoriandev.saveursolidaire.utils.TestUtil;
 import com.ivoriandev.saveursolidaire.utils.constants.AppConstantsTest;
 import com.ivoriandev.saveursolidaire.utils.constants.AuthoritiesConstantsTest;
 import com.ivoriandev.saveursolidaire.utils.dto.basket.CreateBasketDto;
-import org.junit.FixMethodOrder;
+import jakarta.transaction.Transactional;
+import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.junit.runners.MethodSorters;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -18,6 +18,7 @@ import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -29,7 +30,7 @@ import static com.ivoriandev.saveursolidaire.utils.constants.AppConstantsTest.AP
 @RunWith(SpringRunner.class)
 @ActiveProfiles(profiles = AppConstantsTest.TEST_PROFILE)
 @AutoConfigureMockMvc
-@FixMethodOrder(MethodSorters.JVM)
+@Transactional
 public class BasketControllerTest {
     private static final String BASE_PATH = API_BASE_URL_V1 + "/baskets";
 
@@ -184,21 +185,76 @@ public class BasketControllerTest {
     @Test
     @WithUserDetails(AuthoritiesConstantsTest.ADMIN)
     public void testUpdateBasketActiveStatusWithUserAdmin() throws Exception {
-        Basket basket = basketService.read(1);
+        //Create a new basket
+        CreateBasketDto basket = new CreateBasketDto();
+        basket.setName("BASKET_CREATE_SELLER_ACTIVE");
+        basket.setDescription("DESCRIPTION_CREATE_SELLER_ACTIVE");
+        basket.setPrice(1000.0);
+        basket.setQuantity(5);
+        basket.setNote("NOTE_CREATE_SELLER_ACTIVE");
+        basket.setStoreId(1);
 
-        this.mockMvc.perform(put(BASE_PATH + "/1/active-status"))
+        Basket createBasket = basketService.create(basket);
+
+        //Assert that the basket is created and isActive is true default
+        Assert.assertNotNull(createBasket);
+        Assert.assertTrue(createBasket.getIsActive());
+
+
+        this.mockMvc.perform(put(BASE_PATH + "/"+ createBasket.getId() +"/active-status"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.isActive").value(!basket.getIsActive()));
+                .andExpect(jsonPath("$.isActive").value(Boolean.FALSE));
+    }
+
+    @Test
+    @WithUserDetails(AuthoritiesConstantsTest.ADMIN)
+    public void testUpdateBasketActiveStatus2WithUserAdmin() throws Exception {
+        //Create a new basket
+        CreateBasketDto basket = new CreateBasketDto();
+        basket.setName("BASKET_CREATE_SELLER_ACTIVE");
+        basket.setDescription("DESCRIPTION_CREATE_SELLER_ACTIVE");
+        basket.setPrice(1000.0);
+        basket.setQuantity(5);
+        basket.setNote("NOTE_CREATE_SELLER_ACTIVE");
+        basket.setStoreId(1);
+
+        Basket createBasket = basketService.create(basket);
+
+        createBasket.setIsActive(Boolean.FALSE);
+        basketRepository.save(createBasket);
+
+        //Assert that the basket is created and isActive is true default
+        Assert.assertNotNull(createBasket);
+        Assert.assertFalse(createBasket.getIsActive());
+
+
+        this.mockMvc.perform(put(BASE_PATH + "/"+ createBasket.getId() +"/active-status"))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.isActive").value(Boolean.TRUE));
     }
 
     @Test
     @WithUserDetails(AuthoritiesConstantsTest.SELLER)
     public void testUpdateBasketActiveStatusWithUserSeller() throws Exception {
-        Basket basket = basketService.read(1);
+        //Create a new basket
+        CreateBasketDto basket = new CreateBasketDto();
+        basket.setName("BASKET_CREATE_SELLER_ACTIVE");
+        basket.setDescription("DESCRIPTION_CREATE_SELLER_ACTIVE");
+        basket.setPrice(1000.0);
+        basket.setQuantity(5);
+        basket.setNote("NOTE_CREATE_SELLER_ACTIVE");
+        basket.setStoreId(1);
 
-        this.mockMvc.perform(put(BASE_PATH + "/1/active-status"))
+        Basket createBasket = basketService.create(basket);
+
+        //Assert that the basket is created and isActive is true default
+        Assert.assertNotNull(createBasket);
+        Assert.assertTrue(createBasket.getIsActive());
+
+
+        this.mockMvc.perform(put(BASE_PATH + "/"+ createBasket.getId() +"/active-status"))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.isActive").value(!basket.getIsActive()));
+                .andExpect(jsonPath("$.isActive").value(Boolean.FALSE));
     }
 
     @Test

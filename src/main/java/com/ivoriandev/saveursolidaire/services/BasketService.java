@@ -75,6 +75,8 @@ public class BasketService implements CrudService<Basket> {
     public Basket updateActiveStatus(Integer id) {
         Basket basket = read(id);
         basket.setIsActive(!basket.getIsActive());
-        return basketRepository.save(basket);
+        basket = basketRepository.save(basket);
+
+        return basket;
     }
 }
