@@ -1,7 +1,5 @@
 package com.ivoriandev.saveursolidaire.models;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 import com.ivoriandev.saveursolidaire.models.base.BaseEntity;
 import com.ivoriandev.saveursolidaire.models.embedded.Location;
 import jakarta.persistence.*;
