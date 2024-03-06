@@ -4,7 +4,6 @@ import com.ivoriandev.saveursolidaire.models.UserStore;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
-import java.util.Optional;
 
 public interface UserStoreRepository extends JpaRepository<UserStore, Integer> {
     List<UserStore> findAllByUserIdAndIsActiveTrue(Integer userId);

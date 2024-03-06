@@ -2,7 +2,10 @@ package com.ivoriandev.saveursolidaire.utils.dto.order;
 
 import com.ivoriandev.saveursolidaire.models.OrderLine;
 import com.ivoriandev.saveursolidaire.utils.dto.basket.BasketDto;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.Date;

@@ -3,7 +3,10 @@ package com.ivoriandev.saveursolidaire.utils.dto.store;
 import com.ivoriandev.saveursolidaire.models.Store;
 import com.ivoriandev.saveursolidaire.models.embedded.Location;
 import com.ivoriandev.saveursolidaire.utils.dto.file.FileDto;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.Date;

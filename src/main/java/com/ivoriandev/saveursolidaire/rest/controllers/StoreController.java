@@ -4,7 +4,6 @@ import com.ivoriandev.saveursolidaire.models.Store;
 import com.ivoriandev.saveursolidaire.models.embedded.Location;
 import com.ivoriandev.saveursolidaire.services.StoreService;
 import com.ivoriandev.saveursolidaire.utils.constants.AuthoritiesConstants;
-import com.ivoriandev.saveursolidaire.utils.dto.store.StoreDto;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

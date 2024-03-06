@@ -1,7 +1,6 @@
 package com.ivoriandev.saveursolidaire.repositories;
 
 import com.ivoriandev.saveursolidaire.models.Basket;
-import com.ivoriandev.saveursolidaire.models.Role;
 import com.ivoriandev.saveursolidaire.models.Store;
 import com.ivoriandev.saveursolidaire.models.embedded.Location;
 import com.ivoriandev.saveursolidaire.utils.constants.AppConstantsTest;

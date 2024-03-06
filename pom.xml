@@ -125,6 +125,16 @@
 					</execution>
 				</executions>
 			</plugin>
+			<plugin>
+				<groupId>org.openrewrite.maven</groupId>
+				<artifactId>rewrite-maven-plugin</artifactId>
+				<version>5.23.1</version>
+				<configuration>
+					<activeRecipes>
+						<recipe>org.openrewrite.java.RemoveUnusedImports</recipe>
+					</activeRecipes>
+				</configuration>
+			</plugin>
 		</plugins>
 	</build>
 

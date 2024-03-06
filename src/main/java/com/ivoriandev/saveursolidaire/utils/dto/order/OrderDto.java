@@ -3,7 +3,10 @@ package com.ivoriandev.saveursolidaire.utils.dto.order;
 import com.ivoriandev.saveursolidaire.models.Order;
 import com.ivoriandev.saveursolidaire.utils.dto.user.UserDto;
 import com.ivoriandev.saveursolidaire.utils.enums.order.PaymentMethodEnum;
-import lombok.*;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 import java.io.Serializable;
 import java.util.Date;

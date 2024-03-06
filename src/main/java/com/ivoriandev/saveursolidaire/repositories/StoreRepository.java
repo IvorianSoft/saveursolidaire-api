@@ -1,7 +1,6 @@
 package com.ivoriandev.saveursolidaire.repositories;
 
 import com.ivoriandev.saveursolidaire.models.Store;
-import com.ivoriandev.saveursolidaire.models.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;

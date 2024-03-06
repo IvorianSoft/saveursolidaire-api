@@ -1,6 +1,5 @@
 package com.ivoriandev.saveursolidaire.utils.dto.auth;
 
-import com.ivoriandev.saveursolidaire.utils.dto.user.UserDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;

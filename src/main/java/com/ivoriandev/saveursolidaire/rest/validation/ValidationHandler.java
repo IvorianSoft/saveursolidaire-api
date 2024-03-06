@@ -1,6 +1,5 @@
 package com.ivoriandev.saveursolidaire.rest.validation;
 
-import jakarta.validation.constraints.NotNull;
 import lombok.NonNull;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
