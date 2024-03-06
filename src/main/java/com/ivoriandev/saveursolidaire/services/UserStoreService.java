@@ -4,7 +4,6 @@ import com.ivoriandev.saveursolidaire.models.Store;
 import com.ivoriandev.saveursolidaire.models.User;
 import com.ivoriandev.saveursolidaire.models.UserStore;
 import com.ivoriandev.saveursolidaire.repositories.UserStoreRepository;
-import com.ivoriandev.saveursolidaire.services.interfaces.CrudService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

@@ -3,7 +3,6 @@ package com.ivoriandev.saveursolidaire.rest.controllers;
 import com.ivoriandev.saveursolidaire.services.AuthService;
 import com.ivoriandev.saveursolidaire.utils.dto.auth.AuthenticationDto;
 import com.ivoriandev.saveursolidaire.utils.dto.auth.AuthenticationResponse;
-import com.ivoriandev.saveursolidaire.utils.dto.auth.TokenDto;
 import com.ivoriandev.saveursolidaire.utils.dto.user.SellerRegisterDto;
 import com.ivoriandev.saveursolidaire.utils.dto.user.UserDto;
 import com.ivoriandev.saveursolidaire.utils.dto.user.UserRegisterDto;
