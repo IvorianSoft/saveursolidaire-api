@@ -19,7 +19,7 @@ server:
 
 logging:
   file:
-    name: saveur_solidaire.log
+    name: ./logs/saveur_solidaire.log
 
 springdoc:
   api-docs:

@@ -1,13 +1,13 @@
 package com.ivoriandev.saveursolidaire.services;
 
-import com.ivoriandev.saveursolidaire.exceptions.BadRequestException;
 import com.ivoriandev.saveursolidaire.exceptions.ConflictException;
+import com.ivoriandev.saveursolidaire.exceptions.ForbiddenException;
 import com.ivoriandev.saveursolidaire.models.Role;
 import com.ivoriandev.saveursolidaire.models.Store;
+import com.ivoriandev.saveursolidaire.models.User;
 import com.ivoriandev.saveursolidaire.models.embedded.Location;
 import com.ivoriandev.saveursolidaire.repositories.UserRepository;
 import com.ivoriandev.saveursolidaire.services.jwt.JwtService;
-import com.ivoriandev.saveursolidaire.models.User;
 import com.ivoriandev.saveursolidaire.utils.Utilities;
 import com.ivoriandev.saveursolidaire.utils.dto.auth.AuthenticationDto;
 import com.ivoriandev.saveursolidaire.utils.dto.auth.AuthenticationResponse;
@@ -47,16 +47,20 @@ public class AuthService {
     }
 
     public AuthenticationResponse authenticate(AuthenticationDto authenticationDto) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        authenticationDto.getEmail(),
-                        authenticationDto.getPassword()
-                )
-        );
+        try{
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            authenticationDto.getEmail(),
+                            authenticationDto.getPassword()
+                    )
+            );
+        } catch (Exception e) {
+            throw new ForbiddenException(e.getMessage());
+        }
 
         var user = userService.findByEmail(authenticationDto.getEmail());
         if (user == null) {
-            throw new BadRequestException("Invalid credentials");
+            throw new ForbiddenException("Invalid credentials");
         }
         var token = jwtService.generateToken(user);
 
@@ -69,7 +73,7 @@ public class AuthService {
         var userName = Utilities.getAuthenticateUserName();
         User user = userService.findByEmail(userName);
         if (user == null) {
-            throw new BadRequestException("Invalid credentials");
+            throw new ForbiddenException("Invalid credentials");
         }
 
         return UserDto.from(user);
