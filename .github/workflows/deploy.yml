@@ -39,14 +39,11 @@ jobs:
           name: saveur-solidaire-api.jar
           path: ./target/
 
-      - name : Content of the target folder
-        run: ls -l ./target/
-
       - name: Deploy to Server
         uses: i3h/deploy-with-scp@v1
         with:
           server-ip: ${{ secrets.SERVER_IP_PROD }}
           username: ${{ secrets.SERVER_USERNAME }}
           ssh-key: ${{ secrets.SERVER_SSH_KEY }}
-          src: ./target/saveur-solidaire-api.jar
+          src: ./target/saveursolidaire.jar
           dest: /home/${{ secrets.SERVER_USERNAME }}/saveur-solidaire-api/git-deployments/saveur-solidaire-api-${{ github.ref_name }}.jar
