@@ -39,6 +39,9 @@ jobs:
           name: saveur-solidaire-api.jar
           path: ./target/
 
+      - name : Content of the target folder
+        run: ls -l ./target/
+
       - name: Deploy to Server
         uses: i3h/deploy-with-scp@v1
         with:
