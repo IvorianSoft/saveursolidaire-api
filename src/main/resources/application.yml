@@ -59,10 +59,7 @@ spring:
     password: Xb3r7z5v
 
   jpa:
-    show-sql: true
     properties:
-      hibernate:
-        format_sql: false
         dialect: org.hibernate.dialect.PostgreSQLDialect
 
 server:
