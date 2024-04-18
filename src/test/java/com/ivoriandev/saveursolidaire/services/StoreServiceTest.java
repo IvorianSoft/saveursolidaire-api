@@ -12,10 +12,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.test.context.support.WithUserDetails;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 @SpringBootTest
 @RunWith(SpringRunner.class)
 @ActiveProfiles(profiles = AppConstantsTest.TEST_PROFILE)
+@Transactional
 public class StoreServiceTest {
     @Autowired
     private StoreService storeService;
