@@ -33,13 +33,13 @@ jobs:
         cache: maven
 
     - name : Scan and delete unused imports
-      run: mvn rewrite:run
+      run: ./mvnw rewrite:run
 
     - name: Build with Maven
-      run: mvn clean install -DskipTests
+      run: ./mvnw clean install -DskipTests
 
     - name: Test with Maven and generate JaCoCo report
-      run: mvn test jacoco:report
+      run: ./mvnw test jacoco:report
 
     - name: Upload coverage reports to Codecov
       if: github.ref == 'refs/heads/main'
