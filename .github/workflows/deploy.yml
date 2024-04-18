@@ -47,3 +47,13 @@ jobs:
           ssh-key: ${{ secrets.SERVER_SSH_KEY }}
           src: ./target/saveursolidaire.jar
           dest: /home/${{ secrets.SERVER_USERNAME }}/saveur-solidaire-api/git-deployments/saveur-solidaire-api-${{ github.ref_name }}.jar
+
+  cleanup:
+    needs: deploy
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Delete artifact
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: saveur-solidaire-api.jar

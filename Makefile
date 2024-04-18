@@ -7,6 +7,9 @@ DOCKER_COMPOSE := docker-compose -f $(DOCKER_COMPOSE_FILE)
 build:
 	./mvnw clean package -DskipTests
 
+tests:
+	./mvnw test
+
 docker-build: build
 	$(DOCKER_COMPOSE) build
 
@@ -25,4 +28,5 @@ restart: stop run
 # Cible pour le build Java et le build Docker
 build-and-docker: build docker-build
 
-.PHONY: build docker-build docker-up docker-down run stop restart build-and-docker
+# Cible par défaut
+.PHONY: build docker-build docker-up docker-down run stop restart build-and-docker test
