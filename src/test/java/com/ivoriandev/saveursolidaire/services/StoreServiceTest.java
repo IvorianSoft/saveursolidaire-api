@@ -119,10 +119,11 @@ public class StoreServiceTest {
     @Test
     public void testUpdateIsActive() {
         Store store = storeService.read(1);
+        Boolean isActiveOld = store.getIsActive();
 
         Store updatedStore = storeService.updateIsActive(store.getId());
 
-        Assert.assertNotEquals(store.getIsActive(), updatedStore.getIsActive());
+        Assert.assertNotEquals(isActiveOld, updatedStore.getIsActive());
         Assert.assertEquals(Boolean.FALSE, updatedStore.getIsActive());
     }
 
