@@ -9,6 +9,7 @@ import com.ivoriandev.saveursolidaire.models.embedded.Location;
 import com.ivoriandev.saveursolidaire.repositories.StoreRepository;
 import com.ivoriandev.saveursolidaire.services.interfaces.CrudService;
 import com.ivoriandev.saveursolidaire.utils.dto.store.SearchStoreDto;
+import com.ivoriandev.saveursolidaire.utils.enums.store.StoreCategoryEnum;
 import org.locationtech.jts.geom.Coordinate;
 import org.locationtech.jts.geom.Geometry;
 import org.locationtech.jts.util.GeometricShapeFactory;
@@ -36,6 +37,7 @@ public class StoreService implements CrudService<Store> {
     @Override
     public Store create(Store store) {
         try {
+            store.setCategory(store.getCategory() == null ? StoreCategoryEnum.GROCERY : store.getCategory());
             store.setDeletedAt(null);
             store.setIsActive(Boolean.FALSE);
             return storeRepository.save(store);
