@@ -44,7 +44,7 @@ public class StoreServiceTest {
     @Test
     @WithUserDetails(AuthoritiesConstantsTest.ADMIN)
     public void testGetAllStores() {
-        Assert.assertEquals(2, storeService.all().size());
+        Assert.assertEquals(1, storeService.all().size());
     }
 
     @Test

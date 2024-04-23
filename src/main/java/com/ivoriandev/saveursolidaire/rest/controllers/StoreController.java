@@ -4,6 +4,7 @@ import com.ivoriandev.saveursolidaire.models.Store;
 import com.ivoriandev.saveursolidaire.models.embedded.Location;
 import com.ivoriandev.saveursolidaire.services.StoreService;
 import com.ivoriandev.saveursolidaire.utils.constants.AuthoritiesConstants;
+import com.ivoriandev.saveursolidaire.utils.dto.store.SearchStoreDto;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -72,4 +73,12 @@ public class StoreController {
     public ResponseEntity<Store> updateLocation(@RequestBody @Validated Location location, @PathVariable("id") Integer id) {
         return ResponseEntity.ok(storeService.updateLocation(id, location));
     }
+
+    @Operation(summary = "Search stores by location")
+    @PostMapping(value = "/search", consumes = {"application/json"}, produces = {"application/json;charset=UTF-8"})
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SELLER + "', '" + AuthoritiesConstants.USER + "', '" + AuthoritiesConstants.CUSTOMER + "')")
+    public ResponseEntity<List<Store>> search(@RequestBody @Validated SearchStoreDto searchStoreDto) {
+        return ResponseEntity.ok(storeService.getAllFromLocation(searchStoreDto));
+    }
+
 }
