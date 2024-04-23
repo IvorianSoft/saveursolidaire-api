@@ -63,6 +63,11 @@ spring:
   jpa:
     properties:
         dialect: org.hibernate.dialect.PostgreSQLDialect
+        hibernate:
+          format_sql: false
+          show_sql: false
+          temp:
+            use_jdbc_metadata_defaults: false
 
 server:
   port: 8090
