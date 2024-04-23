@@ -1,17 +1,21 @@
 package com.ivoriandev.saveursolidaire.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.ivoriandev.saveursolidaire.models.base.BaseEntity;
 import com.ivoriandev.saveursolidaire.models.embedded.Location;
+import com.ivoriandev.saveursolidaire.models.listeners.StoreEntityListener;
 import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.SQLDelete;
 import org.hibernate.annotations.Where;
+import org.locationtech.jts.geom.Point;
 
 @Getter
 @Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
+@EntityListeners(StoreEntityListener.class)
 @Entity
 @Table(name = "stores")
 @SQLDelete(sql = "UPDATE stores SET deleted_at = NOW() WHERE id = ?")
@@ -35,4 +39,7 @@ public class Store extends BaseEntity {
 
     @Embedded
     private Location location;
+
+    @JsonIgnore
+    private Point geopoint;
 }
