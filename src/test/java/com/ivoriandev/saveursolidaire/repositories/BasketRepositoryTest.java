@@ -4,6 +4,7 @@ import com.ivoriandev.saveursolidaire.models.Basket;
 import com.ivoriandev.saveursolidaire.models.Store;
 import com.ivoriandev.saveursolidaire.models.embedded.Location;
 import com.ivoriandev.saveursolidaire.utils.constants.AppConstantsTest;
+import com.ivoriandev.saveursolidaire.utils.enums.store.StoreCategoryEnum;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -45,6 +46,7 @@ public class BasketRepositoryTest {
         store.setLocation(location);
         store.setContact("0000000000");
         store.setDescription("Description");
+        store.setCategory(StoreCategoryEnum.GROCERY);
         entityManager.persistAndFlush(store);
 
         Basket basket = new Basket();
@@ -108,6 +110,7 @@ public class BasketRepositoryTest {
         store.setLocation(location);
         store.setContact("0000000000");
         store.setDescription("Description");
+        store.setCategory(StoreCategoryEnum.GROCERY);
         entityManager.persistAndFlush(store);
 
         Basket basket = new Basket();
