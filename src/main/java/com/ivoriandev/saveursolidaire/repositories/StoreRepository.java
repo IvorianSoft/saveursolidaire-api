@@ -12,5 +12,5 @@ public interface StoreRepository extends JpaRepository<Store, Integer> {
     List<Store> findAllByIdIn(Set<Integer> ids);
 
     @Query("SELECT s FROM Store s WHERE s.isActive = true AND within(s.geopoint, ?1) = true")
-    List<Store> findAllByIsActiveTrueAndWithin(Geometry geometry);
+    List<Store> findAllByIsActiveTrueAndGeopointWithin(Geometry geometry);
 }

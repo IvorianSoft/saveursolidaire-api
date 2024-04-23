@@ -4,7 +4,7 @@ import com.ivoriandev.saveursolidaire.models.Store;
 import com.ivoriandev.saveursolidaire.models.embedded.Location;
 import com.ivoriandev.saveursolidaire.services.StoreService;
 import com.ivoriandev.saveursolidaire.utils.constants.AuthoritiesConstants;
-import com.ivoriandev.saveursolidaire.utils.dto.store.SearchStoreDto;
+import com.ivoriandev.saveursolidaire.utils.dto.geospatial.SearchDto;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -75,9 +75,18 @@ public class StoreController {
     }
 
     @Operation(summary = "Search stores by location")
-    @PostMapping(value = "/search", consumes = {"application/json"}, produces = {"application/json;charset=UTF-8"})
+    @GetMapping(value = "/search", produces = {"application/json;charset=UTF-8"})
     @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SELLER + "', '" + AuthoritiesConstants.USER + "', '" + AuthoritiesConstants.CUSTOMER + "')")
-    public ResponseEntity<List<Store>> search(@RequestBody @Validated SearchStoreDto searchStoreDto) {
+    public ResponseEntity<List<Store>> search(
+            @RequestParam("latitude") Double latitude,
+            @RequestParam("longitude") Double longitude,
+            @RequestParam(value = "radius", required = false) Integer radius
+    ) {
+        SearchDto searchStoreDto = SearchDto.builder()
+                .latitude(latitude)
+                .longitude(longitude)
+                .radius(radius == null ? 0 : radius)
+                .build();
         return ResponseEntity.ok(storeService.getAllFromLocation(searchStoreDto));
     }
 

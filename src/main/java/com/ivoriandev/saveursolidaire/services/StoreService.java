@@ -8,11 +8,8 @@ import com.ivoriandev.saveursolidaire.models.UserStore;
 import com.ivoriandev.saveursolidaire.models.embedded.Location;
 import com.ivoriandev.saveursolidaire.repositories.StoreRepository;
 import com.ivoriandev.saveursolidaire.services.interfaces.CrudService;
-import com.ivoriandev.saveursolidaire.utils.dto.store.SearchStoreDto;
+import com.ivoriandev.saveursolidaire.utils.dto.geospatial.SearchDto;
 import com.ivoriandev.saveursolidaire.utils.enums.store.StoreCategoryEnum;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.Geometry;
-import org.locationtech.jts.util.GeometricShapeFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -126,26 +123,11 @@ public class StoreService implements CrudService<Store> {
         storeRepository.delete(store);
     }
 
-    public List<Store> getAllFromLocation(SearchStoreDto searchStoreDto) {
-        return storeRepository.findAllByIsActiveTrueAndWithin(getSearchedArea(searchStoreDto));
+    public List<Store> getAllFromLocation(SearchDto searchStoreDto) {
+        return storeRepository.findAllByIsActiveTrueAndGeopointWithin(SearchAreaService.getSearchedArea(
+                searchStoreDto.getLatitude(),
+                searchStoreDto.getLongitude(),
+                Double.valueOf(searchStoreDto.getRadius())
+        ));
     }
-
-    private Geometry getSearchedArea(SearchStoreDto searchStoreDto) {
-        int POINTS = 32;
-        double DEFAULT_RADIUS = 5; // 5 km
-        double radius = searchStoreDto.getRadius() != null && searchStoreDto.getRadius() > 0.0 ? searchStoreDto.getRadius() : DEFAULT_RADIUS;
-        double radiusInDegrees = kilometersToDegrees(radius);
-
-        GeometricShapeFactory geometricShapeFactory = new GeometricShapeFactory();
-        geometricShapeFactory.setNumPoints(POINTS);
-        geometricShapeFactory.setCentre(new Coordinate(searchStoreDto.getLatitude(), searchStoreDto.getLongitude()));
-        geometricShapeFactory.setSize(radiusInDegrees * 2);
-
-        return geometricShapeFactory.createCircle();
-    }
-
-    private double kilometersToDegrees(double kilometers) {
-        return kilometers / 111; // Approximation générale : 1 degré de latitude ~ 111 km
-    }
-
 }

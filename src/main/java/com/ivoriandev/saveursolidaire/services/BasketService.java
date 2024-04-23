@@ -4,10 +4,13 @@ import com.ivoriandev.saveursolidaire.exceptions.NotFoundException;
 import com.ivoriandev.saveursolidaire.models.Basket;
 import com.ivoriandev.saveursolidaire.repositories.BasketRepository;
 import com.ivoriandev.saveursolidaire.services.interfaces.CrudService;
+import com.ivoriandev.saveursolidaire.utils.dto.basket.BasketDto;
 import com.ivoriandev.saveursolidaire.utils.dto.basket.CreateBasketDto;
+import com.ivoriandev.saveursolidaire.utils.dto.geospatial.SearchDto;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Service
@@ -78,5 +81,18 @@ public class BasketService implements CrudService<Basket> {
         basket = basketRepository.save(basket);
 
         return basket;
+    }
+
+    public List<BasketDto> getAllFromLocation(SearchDto searchDto) {
+        List<Basket> baskets = basketRepository.findAllByStore_IsActiveTrueAndStore_GeopointWithinAndQuantityIsGreaterThanAndIsActiveTrueOrderByPriceAsc(
+                SearchAreaService.getSearchedArea(
+                        searchDto.getLatitude(),
+                        searchDto.getLongitude(),
+                        Double.valueOf(searchDto.getRadius())
+                ),
+                BigDecimal.ZERO.intValue()
+        );
+
+        return baskets.stream().map(BasketDto::from).toList();
     }
 }
