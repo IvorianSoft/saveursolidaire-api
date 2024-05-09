@@ -131,6 +131,7 @@ public class StoreServiceTest {
     }
 
     @Test
+    @WithUserDetails(AuthoritiesConstantsTest.ADMIN)
     public void testUpdateLocation() {
         Location location = Location.builder()
                 .address("UPDATED_ADDRESS")
