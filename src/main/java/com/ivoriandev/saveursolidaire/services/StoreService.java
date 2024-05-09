@@ -10,6 +10,9 @@ import com.ivoriandev.saveursolidaire.repositories.StoreRepository;
 import com.ivoriandev.saveursolidaire.services.interfaces.CrudService;
 import com.ivoriandev.saveursolidaire.utils.dto.geospatial.SearchDto;
 import com.ivoriandev.saveursolidaire.utils.enums.store.StoreCategoryEnum;
+import org.locationtech.jts.geom.Coordinate;
+import org.locationtech.jts.geom.GeometryFactory;
+import org.locationtech.jts.geom.Point;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,19 +79,12 @@ public class StoreService implements CrudService<Store> {
     public Store update(Integer id, Store store) {
         Store existingStore = read(id);
 
-        if (!userService.isCurrentUserAdmin()) {
-            User user = userService.getCurrentUser();
-            UserStore userStore = userStoreService.getOneByUserIdAndStoreId(user, existingStore);
-            if (userStore == null) {
-                throw new BadRequestException(String.format(
-                        "This user is not affiliated with this store %s and cannot update it", existingStore.getId()
-                ));
-            }
-        }
+        throwExceptionIfUserIsNotAdminAndStoreIsNotAffiliatedWithUser(existingStore);
 
         existingStore.setName(store.getName());
         existingStore.setContact(store.getContact());
         existingStore.setDescription(store.getDescription());
+        existingStore.setCategory(store.getCategory());
 
         return storeRepository.save(existingStore);
     }
@@ -104,6 +100,8 @@ public class StoreService implements CrudService<Store> {
     public Store updateLocation(Integer id, Location storeLocation) {
         Store existingStore = read(id);
 
+        throwExceptionIfUserIsNotAdminAndStoreIsNotAffiliatedWithUser(existingStore);
+
         Location location = existingStore.getLocation();
         location.setAddress(storeLocation.getAddress());
         location.setCity(storeLocation.getCity());
@@ -113,6 +111,15 @@ public class StoreService implements CrudService<Store> {
         location.setLatitude(storeLocation.getLatitude());
         location.setLongitude(storeLocation.getLongitude());
         existingStore.setLocation(location);
+
+        Point point = new GeometryFactory().createPoint(
+                new Coordinate(
+                        storeLocation.getLatitude(),
+                        storeLocation.getLongitude()
+                )
+        );
+
+        existingStore.setGeopoint(point);
 
         return storeRepository.save(existingStore);
     }
@@ -129,5 +136,17 @@ public class StoreService implements CrudService<Store> {
                 searchStoreDto.getLongitude(),
                 Double.valueOf(searchStoreDto.getRadius())
         ));
+    }
+
+    private void throwExceptionIfUserIsNotAdminAndStoreIsNotAffiliatedWithUser(Store store) {
+        if (!userService.isCurrentUserAdmin()) {
+            User user = userService.getCurrentUser();
+            UserStore userStore = userStoreService.getOneByUserIdAndStoreId(user, store);
+            if (userStore == null) {
+                throw new BadRequestException(String.format(
+                        "This user is not affiliated with this store %s and cannot update it", store.getId()
+                ));
+            }
+        }
     }
 }

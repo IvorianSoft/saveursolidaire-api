@@ -48,7 +48,7 @@ public class StoreController {
     @Operation(summary = "Update a store, only name, description and contact can be updated.")
     @PutMapping(value = "/{id}", consumes = {"application/json"}, produces = {"application/json;charset=UTF-8"})
     @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SELLER + "')")
-    public ResponseEntity<Store> update(@RequestBody @Validated Store store, @RequestParam("id") Integer id) {
+    public ResponseEntity<Store> update(@RequestBody @Validated Store store, @PathVariable("id") Integer id) {
         return ResponseEntity.ok(storeService.update(id, store));
     }
 
@@ -69,7 +69,7 @@ public class StoreController {
 
     @Operation(summary = "Update location of a store")
     @PutMapping(value = "/{id}/location", consumes = {"application/json"}, produces = {"application/json;charset=UTF-8"})
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "')")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SELLER + "')")
     public ResponseEntity<Store> updateLocation(@RequestBody @Validated Location location, @PathVariable("id") Integer id) {
         return ResponseEntity.ok(storeService.updateLocation(id, location));
     }

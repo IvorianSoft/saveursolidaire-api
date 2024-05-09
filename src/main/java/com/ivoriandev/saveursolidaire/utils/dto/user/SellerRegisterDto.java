@@ -24,6 +24,8 @@ public class SellerRegisterDto extends UserRegisterDto {
     @NotNull
     private String storePostalCode;
     private String storeComplement;
+    @NotNull
     private Double storeLatitude;
+    @NotNull
     private Double storeLongitude;
 }
