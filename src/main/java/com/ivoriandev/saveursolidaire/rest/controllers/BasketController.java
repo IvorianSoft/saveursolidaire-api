@@ -13,6 +13,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -96,5 +97,12 @@ public class BasketController {
                 .radius(radius == null ? 0 : radius)
                 .build();
         return ResponseEntity.ok(basketService.getAllFromLocation(searchDto));
+    }
+
+    @Operation(summary = "Upload image for a basket")
+    @PostMapping(value = "/{id}/image", consumes = {"multipart/form-data"}, produces = {"application/json;charset=UTF-8"})
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SELLER + "')")
+    public ResponseEntity<Basket> uploadImage(@PathVariable("id") Integer id, @RequestParam("file") MultipartFile file) {
+        return ResponseEntity.ok(basketService.uploadImage(id, file));
     }
 }

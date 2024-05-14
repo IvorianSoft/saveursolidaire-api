@@ -48,6 +48,9 @@ spring:
         temp:
           use_jdbc_metadata_defaults: false
 
+upload:
+  path: /Users/hamed/Documents/Projects/SaveurSolidaire/saveursolidaire-api/uploads
+
 ---
 spring:
   config:
@@ -69,6 +72,9 @@ spring:
           dialect: org.hibernate.dialect.PostgreSQLDialect
           temp:
             use_jdbc_metadata_defaults: false
+
+upload:
+  path: /home/hamed/saveur-solidaire-api/upload
 
 server:
   port: 8090

@@ -19,3 +19,6 @@ spring:
             ddl-auto: create-drop
 
         defer-datasource-initialization: true
+
+upload:
+    path: /Users/hamed/Documents/Projects/SaveurSolidaire/saveursolidaire-api/uploads

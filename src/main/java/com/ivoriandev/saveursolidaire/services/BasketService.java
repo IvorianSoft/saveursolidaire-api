@@ -2,13 +2,16 @@ package com.ivoriandev.saveursolidaire.services;
 
 import com.ivoriandev.saveursolidaire.exceptions.NotFoundException;
 import com.ivoriandev.saveursolidaire.models.Basket;
+import com.ivoriandev.saveursolidaire.models.File;
 import com.ivoriandev.saveursolidaire.repositories.BasketRepository;
 import com.ivoriandev.saveursolidaire.services.interfaces.CrudService;
 import com.ivoriandev.saveursolidaire.utils.dto.basket.BasketDto;
 import com.ivoriandev.saveursolidaire.utils.dto.basket.CreateBasketDto;
 import com.ivoriandev.saveursolidaire.utils.dto.geospatial.SearchDto;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -20,6 +23,8 @@ public class BasketService implements CrudService<Basket> {
 
     @Autowired
     private StoreService storeService;
+    @Autowired
+    private FileService fileService;
 
     public Basket create(CreateBasketDto createBasketDto) {
         Basket basket = Basket.builder()
@@ -94,5 +99,14 @@ public class BasketService implements CrudService<Basket> {
         );
 
         return baskets.stream().map(BasketDto::from).toList();
+    }
+
+    public Basket uploadImage(Integer id, @NotNull MultipartFile image) {
+        Basket basket = read(id);
+
+        File file = fileService.saveImage(image);
+        basket.setImage(file);
+
+        return basketRepository.save(basket);
     }
 }
