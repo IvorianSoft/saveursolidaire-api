@@ -61,9 +61,9 @@ public class BasketController {
     }
 
     @Operation(summary = "Update quantity of a basket")
-    @PutMapping(value = "/{id}/quantity", consumes = {"application/json"}, produces = {"application/json;charset=UTF-8"})
+    @PutMapping(value = "/{id}/quantity/{quantity}", consumes = {"application/json"}, produces = {"application/json;charset=UTF-8"})
     @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SELLER + "')")
-    public ResponseEntity<Basket> updateQuantity(@PathVariable("id") Integer id, @RequestParam("quantity") Integer quantity) {
+    public ResponseEntity<Basket> updateQuantity(@PathVariable("id") Integer id, @PathVariable("quantity") Integer quantity) {
         return ResponseEntity.ok(basketService.updateQuantity(id, quantity));
     }
 

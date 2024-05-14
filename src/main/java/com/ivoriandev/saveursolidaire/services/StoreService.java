@@ -144,7 +144,7 @@ public class StoreService implements CrudService<Store> {
             UserStore userStore = userStoreService.getOneByUserIdAndStoreId(user, store);
             if (userStore == null) {
                 throw new BadRequestException(String.format(
-                        "This user is not affiliated with this store %s and cannot update it", store.getId()
+                        "This user %s is not affiliated with this store %s and cannot update it", user.getId(), store.getId()
                 ));
             }
         }

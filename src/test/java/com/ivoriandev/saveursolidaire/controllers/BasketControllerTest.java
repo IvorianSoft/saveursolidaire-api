@@ -165,9 +165,8 @@ public class BasketControllerTest {
     @Test
     @WithUserDetails(AuthoritiesConstantsTest.ADMIN)
     public void testUpdateBasketQuantityWithUserAdmin() throws Exception {
-        this.mockMvc.perform(put(BASE_PATH + "/1/quantity")
-                        .contentType("application/json")
-                        .param("quantity", "5"))
+        this.mockMvc.perform(put(BASE_PATH + "/1/quantity/5")
+                        .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.quantity").value(5));
     }
@@ -175,9 +174,8 @@ public class BasketControllerTest {
     @Test
     @WithUserDetails(AuthoritiesConstantsTest.SELLER)
     public void testUpdateBasketQuantityWithUserSeller() throws Exception {
-        this.mockMvc.perform(put(BASE_PATH + "/1/quantity")
-                        .contentType("application/json")
-                        .param("quantity", "5"))
+        this.mockMvc.perform(put(BASE_PATH + "/1/quantity/5")
+                        .contentType("application/json"))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.quantity").value(5));
     }
