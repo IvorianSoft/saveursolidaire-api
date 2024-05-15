@@ -1,6 +1,7 @@
 package com.ivoriandev.saveursolidaire.utils.dto.order;
 
 import com.ivoriandev.saveursolidaire.models.Order;
+import com.ivoriandev.saveursolidaire.utils.dto.basket.BasketDto;
 import com.ivoriandev.saveursolidaire.utils.dto.user.UserDto;
 import com.ivoriandev.saveursolidaire.utils.enums.order.PaymentMethodEnum;
 import lombok.Builder;
@@ -29,4 +30,6 @@ public class OrderDto implements Serializable {
     Boolean isRecovered;
     PaymentMethodEnum paymentMethod;
     UserDto user;
+    UserDto seller;
+    BasketDto basket;
 }

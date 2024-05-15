@@ -37,4 +37,12 @@ public class Order extends BaseEntity {
     @ManyToOne
     @JoinColumn(name = "user_id", nullable = false, referencedColumnName = "id")
     private User user;
+
+    @ManyToOne
+    @JoinColumn(name = "seller_id", nullable = false, referencedColumnName = "id")
+    private User seller;
+
+    @ManyToOne
+    @JoinColumn(name = "basket_id", nullable = false, referencedColumnName = "id")
+    private Basket basket;
 }
