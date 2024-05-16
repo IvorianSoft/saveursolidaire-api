@@ -26,7 +26,7 @@ public class StoreController {
 
     @Operation(summary = "Get all stores")
     @GetMapping(value = "", produces = {"application/json;charset=UTF-8"})
-    @PreAuthorize("hasAnyRole('"+ AuthoritiesConstants.ADMIN +"', '"+ AuthoritiesConstants.SELLER +"')")
+    @PreAuthorize("hasAnyRole('"+ AuthoritiesConstants.ADMIN +"', '"+ AuthoritiesConstants.SELLER +"' , '"+ AuthoritiesConstants.CUSTOMER +"')")
     public ResponseEntity<List<Store>> all() {
         return ResponseEntity.ok(storeService.all());
     }
