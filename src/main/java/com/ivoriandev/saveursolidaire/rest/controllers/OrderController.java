@@ -3,6 +3,7 @@ package com.ivoriandev.saveursolidaire.rest.controllers;
 import com.ivoriandev.saveursolidaire.models.Order;
 import com.ivoriandev.saveursolidaire.services.OrderService;
 import com.ivoriandev.saveursolidaire.utils.constants.AuthoritiesConstants;
+import com.ivoriandev.saveursolidaire.utils.dto.order.CreateOrderDto;
 import com.ivoriandev.saveursolidaire.utils.dto.order.OrderDto;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,7 @@ public class OrderController {
     @Operation(summary = "Create an order")
     @PostMapping(value = "", consumes = {"application/json"}, produces = {"application/json;charset=UTF-8"})
     @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.CUSTOMER + "')")
-    public ResponseEntity<Order> create(@RequestBody @Validated OrderDto order) {
+    public ResponseEntity<Order> create(@RequestBody @Validated CreateOrderDto order) {
         return ResponseEntity.ok(orderService.create(order));
     }
 
