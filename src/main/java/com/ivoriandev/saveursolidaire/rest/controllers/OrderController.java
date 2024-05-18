@@ -51,6 +51,14 @@ public class OrderController {
         return ResponseEntity.ok(orderService.update(id, order));
     }
 
+    //update the status recovered and paid
+    @Operation(summary = "Update an order, only isPaid and isRecovered can be updated.")
+    @PutMapping(value = "/{id}/status", consumes = {"application/json"}, produces = {"application/json;charset=UTF-8"})
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.CUSTOMER + "')")
+    public ResponseEntity<Order> updateStatus(@PathVariable("id") Integer id) {
+        return ResponseEntity.ok(orderService.updateStatus(id));
+    }
+
     @Operation(summary = "Delete an order")
     @DeleteMapping(value = "/{id}", produces = {"application/json;charset=UTF-8"})
     @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "')")

@@ -65,6 +65,13 @@ public class OrderService implements CrudService<Order> {
         return orderRepository.save(existingOrder);
     }
 
+    public Order updateStatus(Integer id) {
+        Order existingOrder = read(id);
+        existingOrder.setIsPaid(true);
+        existingOrder.setIsRecovered(true);
+        return orderRepository.save(existingOrder);
+    }
+
     @Override
     public void delete(Integer id) {
         Order order = read(id);
