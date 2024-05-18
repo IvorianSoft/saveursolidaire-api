@@ -91,15 +91,31 @@ public ResponseEntity<List<Order>> allByUser() {
 
     @Operation(summary = "Get all orders by seller id")
     @GetMapping(value = "/seller/{sellerId}", produces = {"application/json;charset=UTF-8"})
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SELLER + "')")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "')")
     public ResponseEntity<List<Order>> allBySeller(@PathVariable("sellerId") Integer sellerId) {
         return ResponseEntity.ok(orderService.allBySeller(sellerId));
     }
 
+    @Operation(summary = "Get all orders by seller")
+    @GetMapping(value = "/seller", produces = {"application/json;charset=UTF-8"})
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SELLER + "')")
+    public ResponseEntity<List<Order>> allBySeller() {
+        User user = userService.getCurrentUser();
+        return ResponseEntity.ok(orderService.allBySeller(user.getId()));
+    }
+
     @Operation(summary = "Get all orders by user id and isPaid true")
     @GetMapping(value = "/user/{userId}/is-paid", produces = {"application/json;charset=UTF-8"})
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.CUSTOMER + "')")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "')")
     public ResponseEntity<List<Order>> allByUserAndIsPaid(@PathVariable("userId") Integer userId) {
         return ResponseEntity.ok(orderService.allByUserAndIsPaidTrue(userId));
+    }
+
+    @Operation(summary = "Get all orders by user and isPaid true")
+    @GetMapping(value = "/user/is-paid", produces = {"application/json;charset=UTF-8"})
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.CUSTOMER + "')")
+    public ResponseEntity<List<Order>> allByUserAndIsPaid() {
+        User user = userService.getCurrentUser();
+        return ResponseEntity.ok(orderService.allByUserAndIsPaidTrue(user.getId()));
     }
 }
