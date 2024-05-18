@@ -1,7 +1,9 @@
 package com.ivoriandev.saveursolidaire.rest.controllers;
 
 import com.ivoriandev.saveursolidaire.models.Order;
+import com.ivoriandev.saveursolidaire.models.User;
 import com.ivoriandev.saveursolidaire.services.OrderService;
+import com.ivoriandev.saveursolidaire.services.UserService;
 import com.ivoriandev.saveursolidaire.utils.constants.AuthoritiesConstants;
 import com.ivoriandev.saveursolidaire.utils.dto.order.CreateOrderDto;
 import com.ivoriandev.saveursolidaire.utils.dto.order.OrderDto;
@@ -9,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,6 +25,9 @@ public class OrderController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private UserService userService;
 
     @Operation(summary = "Get all orders")
     @GetMapping(value = "", produces = {"application/json;charset=UTF-8"})
@@ -67,11 +73,20 @@ public class OrderController {
         return ResponseEntity.noContent().build();
     }
 
+    //only for ADMIN
     @Operation(summary = "Get all orders by user id")
     @GetMapping(value = "/user/{userId}", produces = {"application/json;charset=UTF-8"})
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.CUSTOMER + "')")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "')")
     public ResponseEntity<List<Order>> allByUser(@PathVariable("userId") Integer userId) {
         return ResponseEntity.ok(orderService.allByUser(userId));
+    }
+
+    @Operation(summary = "Get all orders by user")
+@GetMapping(value = "/user", produces = {"application/json;charset=UTF-8"})
+@PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.CUSTOMER + "')")
+public ResponseEntity<List<Order>> allByUser() {
+        User user = userService.getCurrentUser();
+    return ResponseEntity.ok(orderService.allByUser(user.getId()));
     }
 
     @Operation(summary = "Get all orders by seller id")
