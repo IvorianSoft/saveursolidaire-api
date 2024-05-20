@@ -33,12 +33,6 @@ jobs:
         with:
           name: saveur-solidaire-api.jar
           path: target/*.jar
-
-      - name: Upload .env file
-        uses: actions/upload-artifact@v2
-        with:
-          name: .env
-          path: .env
         
   deploy:
     needs: build
@@ -50,21 +44,6 @@ jobs:
         with:
           name: saveur-solidaire-api.jar
           path: ./target/
-
-      - name: Download .env file
-        uses: actions/download-artifact@v2
-        with:
-          name: .env
-          path: ./
-
-      - name: Deploy .env file
-        uses: i3h/deploy-with-scp@v1
-        with:
-          server-ip: ${{ secrets.SERVER_IP_PROD }}
-          username: ${{ secrets.SERVER_USERNAME }}
-          ssh-key: ${{ secrets.SERVER_SSH_KEY }}
-          src: ./.env
-          dest: /home/${{ secrets.SERVER_USERNAME }}/saveur-solidaire-api/.env
 
       - name: Deploy to Server
         uses: i3h/deploy-with-scp@v1
@@ -84,8 +63,3 @@ jobs:
         uses: geekyeggo/delete-artifact@v2
         with:
           name: saveur-solidaire-api.jar
-
-      - name: Delete .env file
-        uses: geekyeggo/delete-artifact@v2
-        with:
-          name: .env
