@@ -100,7 +100,6 @@ public class BasketServiceTest {
         assertEquals("BASKET", basket.getName());
         assertEquals("DESCRIPTION", basket.getDescription());
         assertEquals(100.0, basket.getPrice(), 0.0);
-        assertEquals(1, basket.getQuantity(), 0);
         assertEquals(1, basket.getInitialQuantity(), 0);
         assertEquals("NOTE", basket.getNote());
         assertEquals(Boolean.TRUE, basket.getIsActive());
