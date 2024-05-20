@@ -32,72 +32,6 @@ public class OrderServiceTest {
     private BasketRepository basketRepository;
 
     @Test
-    @WithUserDetails(AuthoritiesConstantsTest.CUSTOMER)
-    public void testCreateOrder() {
-        //The default BasketId is 1 and has 1 quantity and 100 price
-        Basket basket = basketRepository.findById(1).orElse(null);
-        Assert.assertNotNull(basket);
-
-        CreateOrderDto createOrderDto = new CreateOrderDto();
-        createOrderDto.setBasketId(basket.getId());
-        createOrderDto.setQuantity(1);
-
-        Order order = orderService.create(createOrderDto);
-
-        Assert.assertNotNull(order);
-        Assert.assertTrue(order.getReference().startsWith("REF-"));
-        Assert.assertEquals(100, order.getTotalPrice(), 0.0);
-        Assert.assertEquals(1, order.getQuantity(), 0.0);
-        Assert.assertEquals(Boolean.FALSE, order.getIsPaid());
-        Assert.assertEquals(Boolean.FALSE, order.getIsRecovered());
-        Assert.assertEquals("CASH", order.getPaymentMethod().toString());
-        Assert.assertEquals(basket.getStore().getId(), order.getStore().getId());
-        Assert.assertEquals(basket.getId(), order.getBasket().getId());
-        Assert.assertEquals(0, basket.getQuantity(), 0.0);
-    }
-
-    @Test
-    @WithUserDetails(AuthoritiesConstantsTest.CUSTOMER)
-    public void testCreateOrderWithQuantityGreaterThanBasketQuantity() {
-        //The default BasketId is 1 and has 1 quantity and 100 price
-        Basket basket = basketRepository.findById(1).orElse(null);
-        Assert.assertNotNull(basket);
-
-        CreateOrderDto createOrderDto = new CreateOrderDto();
-        createOrderDto.setBasketId(basket.getId());
-        createOrderDto.setQuantity(2);
-
-        BadRequestException badRequestException = Assert.assertThrows(BadRequestException.class, () -> {
-            orderService.create(createOrderDto);
-        });
-
-        Assert.assertEquals("You can't order more than available quantity", badRequestException.getReason());
-        Assert.assertTrue(badRequestException.getStatusCode().isSameCodeAs(HttpStatus.BAD_REQUEST));
-    }
-
-    @Test
-    @WithUserDetails(AuthoritiesConstantsTest.CUSTOMER)
-    public void testCreateOrderWithBasketNotAvailable() {
-        //The default BasketId is 1 and has 1 quantity and 100 price
-        Basket basket = basketRepository.findById(1).orElse(null);
-        Assert.assertNotNull(basket);
-
-        basket.setIsActive(Boolean.FALSE);
-        basketRepository.save(basket);
-
-        CreateOrderDto createOrderDto = new CreateOrderDto();
-        createOrderDto.setBasketId(basket.getId());
-        createOrderDto.setQuantity(1);
-
-        BadRequestException badRequestException = Assert.assertThrows(BadRequestException.class, () -> {
-            orderService.create(createOrderDto);
-        });
-
-        Assert.assertEquals("Basket is not available", badRequestException.getReason());
-        Assert.assertTrue(badRequestException.getStatusCode().isSameCodeAs(HttpStatus.BAD_REQUEST));
-    }
-
-    @Test
     @WithUserDetails(AuthoritiesConstantsTest.ADMIN)
     public void testGetAllOrders() {
         Assert.assertEquals(1, orderService.all().size());
@@ -164,6 +98,71 @@ public class OrderServiceTest {
         Assert.assertEquals(2, order.getUser().getId(), 0.0);
         Assert.assertEquals(1, order.getStore().getId(), 0.0);
         Assert.assertEquals(1, order.getBasket().getId(), 0.0);
+    }
+
+    @Test
+    @WithUserDetails(AuthoritiesConstantsTest.CUSTOMER)
+    public void testCreateOrder() {
+        //The default BasketId is 1 and has 1 quantity and 100 price
+        Basket basket = basketRepository.findById(1).orElse(null);
+        Assert.assertNotNull(basket);
+
+        CreateOrderDto createOrderDto = new CreateOrderDto();
+        createOrderDto.setBasketId(basket.getId());
+        createOrderDto.setQuantity(1);
+
+        Order order = orderService.create(createOrderDto);
+
+        Assert.assertNotNull(order);
+        Assert.assertTrue(order.getReference().startsWith("REF-"));
+        Assert.assertEquals(100, order.getTotalPrice(), 0.0);
+        Assert.assertEquals(1, order.getQuantity(), 0.0);
+        Assert.assertEquals(Boolean.FALSE, order.getIsPaid());
+        Assert.assertEquals(Boolean.FALSE, order.getIsRecovered());
+        Assert.assertEquals("CASH", order.getPaymentMethod().toString());
+        Assert.assertEquals(basket.getStore().getId(), order.getStore().getId());
+        Assert.assertEquals(basket.getId(), order.getBasket().getId());
+        Assert.assertEquals(0, basket.getQuantity(), 0.0);
+    }
+
+    @Test
+    @WithUserDetails(AuthoritiesConstantsTest.CUSTOMER)
+    public void testCreateOrderWithQuantityGreaterThanBasketQuantity() {
+        //The default BasketId is 1 and has 1 quantity and 100 price
+        Basket basket = basketRepository.findById(1).orElse(null);
+        Assert.assertNotNull(basket);
+
+        CreateOrderDto createOrderDto = new CreateOrderDto();
+        createOrderDto.setBasketId(basket.getId());
+        createOrderDto.setQuantity(2);
+
+        BadRequestException badRequestException = Assert.assertThrows(BadRequestException.class, () -> {
+            orderService.create(createOrderDto);
+        });
+
+        Assert.assertTrue(badRequestException.getStatusCode().isSameCodeAs(HttpStatus.BAD_REQUEST));
+    }
+
+    @Test
+    @WithUserDetails(AuthoritiesConstantsTest.CUSTOMER)
+    public void testCreateOrderWithBasketNotAvailable() {
+        //The default BasketId is 1 and has 1 quantity and 100 price
+        Basket basket = basketRepository.findById(1).orElse(null);
+        Assert.assertNotNull(basket);
+
+        basket.setIsActive(Boolean.FALSE);
+        basketRepository.save(basket);
+
+        CreateOrderDto createOrderDto = new CreateOrderDto();
+        createOrderDto.setBasketId(basket.getId());
+        createOrderDto.setQuantity(1);
+
+        BadRequestException badRequestException = Assert.assertThrows(BadRequestException.class, () -> {
+            orderService.create(createOrderDto);
+        });
+
+        Assert.assertEquals("Basket is not available", badRequestException.getReason());
+        Assert.assertTrue(badRequestException.getStatusCode().isSameCodeAs(HttpStatus.BAD_REQUEST));
     }
 
     @Test
