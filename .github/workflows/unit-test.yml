@@ -32,6 +32,12 @@ jobs:
         distribution: 'temurin'
         cache: maven
 
+    - name: Set up environment variables
+      run: |
+        echo "CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}" >> .env
+        echo "CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}" >> .env
+        echo "CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}" >> .env
+
     - name : Scan and delete unused imports
       run: ./mvnw rewrite:run
 
