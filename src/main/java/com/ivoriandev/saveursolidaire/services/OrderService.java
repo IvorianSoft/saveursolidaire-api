@@ -2,17 +2,22 @@ package com.ivoriandev.saveursolidaire.services;
 
 import com.ivoriandev.saveursolidaire.exceptions.BadRequestException;
 import com.ivoriandev.saveursolidaire.exceptions.NotFoundException;
+import com.ivoriandev.saveursolidaire.models.Basket;
 import com.ivoriandev.saveursolidaire.models.Order;
+import com.ivoriandev.saveursolidaire.models.User;
 import com.ivoriandev.saveursolidaire.repositories.OrderRepository;
 import com.ivoriandev.saveursolidaire.services.interfaces.CrudService;
+import com.ivoriandev.saveursolidaire.utils.Utilities;
+import com.ivoriandev.saveursolidaire.utils.constants.AuthoritiesConstants;
 import com.ivoriandev.saveursolidaire.utils.dto.order.CreateOrderDto;
-import com.ivoriandev.saveursolidaire.utils.dto.order.OrderDto;
+import com.ivoriandev.saveursolidaire.utils.enums.order.PaymentMethodEnum;
+import jakarta.transaction.Transactional;
+import org.apache.commons.lang3.time.DateFormatUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
-
-import static java.nio.file.Files.exists;
 
 @Service
 public class OrderService implements CrudService<Order> {
@@ -26,24 +31,40 @@ public class OrderService implements CrudService<Order> {
     @Autowired
     private UserService userService;
 
-    public Order create(CreateOrderDto orderDto) {
+    @Transactional(rollbackOn = Exception.class)
+    public Order create(CreateOrderDto createOrderDto) {
+        Basket basket = basketService.read(createOrderDto.getBasketId());
+
+        throwErrorIfBasketIsNotAvailable(basket, createOrderDto);
+
         Order order = Order.builder()
-                .reference(orderDto.getReference())
-                .totalPrice(orderDto.getTotalPrice())
-                .isPaid(orderDto.getIsPaid())
-                .isRecovered(orderDto.getIsRecovered())
-                .paymentMethod(orderDto.getPaymentMethod())
-                .user(userService.read(orderDto.getUserId()))
-                .seller(userService.read(orderDto.getSellerId()))
-                .basket(basketService.read(orderDto.getBasketId()))
+                .reference(generateReference())
+                .totalPrice(getTotalPrice(basket, createOrderDto))
+                .quantity(createOrderDto.getQuantity())
+                .isPaid(Boolean.FALSE)
+                .isRecovered(Boolean.FALSE)
+                .paymentMethod(PaymentMethodEnum.CASH)
+                .user(userService.getCurrentUser())
+                .store(basket.getStore())
+                .basket(basketService.read(createOrderDto.getBasketId()))
                 .build();
         order.setDeletedAt(null);
+
         return orderRepository.save(order);
     }
 
     @Override
     public List<Order> all() {
-        return orderRepository.findAll();
+        User user = userService.getCurrentUser();
+        if (user.getRole().getName().equals(AuthoritiesConstants.ADMIN)) {
+            return orderRepository.findAll();
+        }
+
+        return orderRepository.findAllByUserId(user.getId());
+    }
+
+    public List<Order> allByStore(Integer storeId) {
+        return orderRepository.findAllByStoreId(storeId);
     }
 
     @Override
@@ -55,20 +76,16 @@ public class OrderService implements CrudService<Order> {
         return order;
     }
 
-    public Order update(Integer id, OrderDto order) {
-        Order existingOrder = read(id);
-        existingOrder.setReference(order.getReference());
-        existingOrder.setTotalPrice(order.getTotalPrice());
-        existingOrder.setIsPaid(order.getIsPaid());
-        existingOrder.setIsRecovered(order.getIsRecovered());
-        existingOrder.setPaymentMethod(order.getPaymentMethod());
-        return orderRepository.save(existingOrder);
-    }
-
     public Order updateStatus(Integer id) {
         Order existingOrder = read(id);
-        existingOrder.setIsPaid(true);
-        existingOrder.setIsRecovered(true);
+
+        User user = userService.getCurrentUser();
+        if (!user.getRole().getName().equals(AuthoritiesConstants.ADMIN) && !existingOrder.getUser().getId().equals(user.getId())) {
+            throw new BadRequestException("You are not allowed to update this order");
+        }
+
+        existingOrder.setIsPaid(Boolean.TRUE);
+        existingOrder.setIsRecovered(Boolean.TRUE);
         return orderRepository.save(existingOrder);
     }
 
@@ -78,15 +95,28 @@ public class OrderService implements CrudService<Order> {
         orderRepository.delete(order);
     }
 
-    public List<Order> allByUser(Integer userId) {
-        return orderRepository.findAllByUserId(userId);
+    public List<Order> allByUserAndIsPaidTrue() {
+        User user = userService.getCurrentUser();
+        return orderRepository.findAllByUserIdAndIsPaidTrue(user.getId());
     }
 
-    public List<Order> allBySeller(Integer sellerId) {
-        return orderRepository.findAllBySellerId(sellerId);
+    private String generateReference() {
+        Date date = Utilities.getCurrentDate();
+        String reference = "REF-" + DateFormatUtils.format(date, "yyyyMMdd");
+        int count = 1;
+
+        while (orderRepository.existsByReference(reference + "-" + count)) {
+            count++;
+        }
+
+        return String.format("%s-%d", reference, count);
     }
 
-    public List<Order> allByUserAndIsPaidTrue(Integer userId) {
-        return orderRepository.findAllByUserIdAndIsPaidTrue(userId);
+    private void throwErrorIfBasketIsNotAvailable(Basket basket, CreateOrderDto createOrderDto) {
+        basketService.throwErrorIfBasketIsNotAvailable(basket, createOrderDto.getQuantity());
+    }
+
+    private Double getTotalPrice(Basket basket, CreateOrderDto createOrderDto) {
+        return basket.getPrice() * createOrderDto.getQuantity();
     }
 }

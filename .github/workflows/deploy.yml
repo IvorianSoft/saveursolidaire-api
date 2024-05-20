@@ -19,6 +19,12 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      - name: Set up environment variables
+        run: |
+          echo "CLOUDINARY_API_KEY=${{ secrets.CLOUDINARY_API_KEY }}" >> .env
+          echo "CLOUDINARY_API_SECRET=${{ secrets.CLOUDINARY_API_SECRET }}" >> .env
+          echo "CLOUDINARY_CLOUD_NAME=${{ secrets.CLOUDINARY_CLOUD_NAME }}" >> .env
+
       - name: Build with Maven
         run: mvn clean install -Dspring.profiles.active=prod
 
@@ -27,6 +33,12 @@ jobs:
         with:
           name: saveur-solidaire-api.jar
           path: target/*.jar
+
+      - name: Upload .env file
+        uses: actions/upload-artifact@v2
+        with:
+          name: .env
+          path: .env
         
   deploy:
     needs: build
@@ -38,6 +50,21 @@ jobs:
         with:
           name: saveur-solidaire-api.jar
           path: ./target/
+
+      - name: Download .env file
+        uses: actions/download-artifact@v2
+        with:
+          name: .env
+          path: ./
+
+      - name: Deploy .env file
+        uses: i3h/deploy-with-scp@v1
+        with:
+          server-ip: ${{ secrets.SERVER_IP_PROD }}
+          username: ${{ secrets.SERVER_USERNAME }}
+          ssh-key: ${{ secrets.SERVER_SSH_KEY }}
+          src: ./.env
+          dest: /home/${{ secrets.SERVER_USERNAME }}/saveur-solidaire-api/.env
 
       - name: Deploy to Server
         uses: i3h/deploy-with-scp@v1
@@ -57,3 +84,8 @@ jobs:
         uses: geekyeggo/delete-artifact@v2
         with:
           name: saveur-solidaire-api.jar
+
+      - name: Delete .env file
+        uses: geekyeggo/delete-artifact@v2
+        with:
+          name: .env

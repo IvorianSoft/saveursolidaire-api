@@ -1,8 +1,10 @@
 package com.ivoriandev.saveursolidaire.services;
 
+import com.ivoriandev.saveursolidaire.exceptions.BadRequestException;
 import com.ivoriandev.saveursolidaire.exceptions.NotFoundException;
 import com.ivoriandev.saveursolidaire.models.Basket;
 import com.ivoriandev.saveursolidaire.models.File;
+import com.ivoriandev.saveursolidaire.models.Order;
 import com.ivoriandev.saveursolidaire.repositories.BasketRepository;
 import com.ivoriandev.saveursolidaire.services.interfaces.CrudService;
 import com.ivoriandev.saveursolidaire.utils.dto.basket.BasketDto;
@@ -10,6 +12,7 @@ import com.ivoriandev.saveursolidaire.utils.dto.basket.CreateBasketDto;
 import com.ivoriandev.saveursolidaire.utils.dto.geospatial.SearchDto;
 import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -108,5 +111,30 @@ public class BasketService implements CrudService<Basket> {
         basket.setImage(file);
 
         return basketRepository.save(basket);
+    }
+
+    public void throwErrorIfBasketIsNotAvailable(Basket basket, Integer quantity){
+        if(!basket.getIsActive()) {
+            throw new BadRequestException("Basket is not available");
+        }
+
+        if(basket.getQuantity() <= 0) {
+            throw new BadRequestException("Basket quantity is not available");
+        }
+
+        if(basket.getQuantity() < quantity) {
+            throw new BadRequestException("You can't order more than available quantity");
+        }
+
+        if(basket.getStore().getIsActive() == Boolean.FALSE) {
+            throw new BadRequestException("Store is not available");
+        }
+    }
+
+    @Async
+    public void updateBasket(Order order) {
+        Basket basket = order.getBasket();
+        basket.setQuantity(basket.getQuantity() - order.getQuantity());
+        basketRepository.save(basket);
     }
 }

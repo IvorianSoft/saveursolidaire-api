@@ -3,6 +3,7 @@ package com.ivoriandev.saveursolidaire.services;
 import com.cloudinary.Cloudinary;
 import com.cloudinary.utils.ObjectUtils;
 import com.ivoriandev.saveursolidaire.exceptions.BadRequestException;
+import io.github.cdimascio.dotenv.Dotenv;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
@@ -17,15 +18,15 @@ import java.util.Objects;
 @Service
 @Slf4j
 public class CloudinaryService {
-    private final static String API_KEY = "951881894742545";
-    private final static String API_SECRET = "zEHrx4_Peg_1RoBxumfCnZbGN34";
-    private final static String CLOUD_NAME = "dcgxwpocq";
 
     @Value("${upload.path}")
     public String uploadDirectory;
 
+    private final Dotenv dotenv = Dotenv.load();
+
     public String getCloudinaryUrl() {
-        return String.format("cloudinary://%s:%s@%s", API_KEY, API_SECRET, CLOUD_NAME);
+        return String.format("cloudinary://%s:%s@%s", dotenv.get("CLOUDINARY_API_KEY"),
+                dotenv.get("CLOUDINARY_API_SECRET"), dotenv.get("CLOUDINARY_CLOUD_NAME"));
     }
 
     public String uploadFile(MultipartFile file) throws IOException {

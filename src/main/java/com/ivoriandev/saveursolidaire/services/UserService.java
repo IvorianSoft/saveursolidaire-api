@@ -1,8 +1,12 @@
 package com.ivoriandev.saveursolidaire.services;
 
 import com.ivoriandev.saveursolidaire.exceptions.NotFoundException;
+import com.ivoriandev.saveursolidaire.models.Basket;
+import com.ivoriandev.saveursolidaire.models.Store;
 import com.ivoriandev.saveursolidaire.models.User;
+import com.ivoriandev.saveursolidaire.models.UserStore;
 import com.ivoriandev.saveursolidaire.repositories.UserRepository;
+import com.ivoriandev.saveursolidaire.repositories.UserStoreRepository;
 import com.ivoriandev.saveursolidaire.services.interfaces.CrudService;
 import com.ivoriandev.saveursolidaire.utils.Utilities;
 import com.ivoriandev.saveursolidaire.utils.constants.AuthoritiesConstants;
@@ -16,6 +20,8 @@ import java.util.List;
 public class UserService implements CrudService<User> {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+    private UserStoreRepository userStoreRepository;
 
     @Override
     public User create(User user) {

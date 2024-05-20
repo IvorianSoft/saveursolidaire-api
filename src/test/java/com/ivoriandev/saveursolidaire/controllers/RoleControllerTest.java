@@ -47,7 +47,7 @@ public class RoleControllerTest {
     }
 
     @Test
-    @WithUserDetails(AuthoritiesConstantsTest.USER)
+    @WithUserDetails(AuthoritiesConstantsTest.CUSTOMER)
     public void testGetAllRolesWithUserUser() throws Exception {
         this.mockMvc.perform(get(BASE_PATH))
                 .andExpect(status().isForbidden());

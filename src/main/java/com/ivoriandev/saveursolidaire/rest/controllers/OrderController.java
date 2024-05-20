@@ -1,17 +1,13 @@
 package com.ivoriandev.saveursolidaire.rest.controllers;
 
 import com.ivoriandev.saveursolidaire.models.Order;
-import com.ivoriandev.saveursolidaire.models.User;
 import com.ivoriandev.saveursolidaire.services.OrderService;
-import com.ivoriandev.saveursolidaire.services.UserService;
 import com.ivoriandev.saveursolidaire.utils.constants.AuthoritiesConstants;
 import com.ivoriandev.saveursolidaire.utils.dto.order.CreateOrderDto;
-import com.ivoriandev.saveursolidaire.utils.dto.order.OrderDto;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -26,14 +22,18 @@ public class OrderController {
     @Autowired
     private OrderService orderService;
 
-    @Autowired
-    private UserService userService;
-
     @Operation(summary = "Get all orders")
     @GetMapping(value = "", produces = {"application/json;charset=UTF-8"})
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "')")
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "' , '" + AuthoritiesConstants.CUSTOMER + "')")
     public ResponseEntity<List<Order>> all() {
         return ResponseEntity.ok(orderService.all());
+    }
+
+    @Operation(summary = "Get all orders by store")
+    @GetMapping(value = "/store/{storeId}", produces = {"application/json;charset=UTF-8"})
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SELLER + "')")
+    public ResponseEntity<List<Order>> allByStore(@PathVariable("storeId") Integer storeId) {
+        return ResponseEntity.ok(orderService.allByStore(storeId));
     }
 
     @Operation(summary = "Get order by id")
@@ -50,14 +50,6 @@ public class OrderController {
         return ResponseEntity.ok(orderService.create(order));
     }
 
-    @Operation(summary = "Update an order, only reference, totalPrice, isPaid, isRecovered and paymentMethod can be updated.")
-    @PutMapping(value = "/{id}", consumes = {"application/json"}, produces = {"application/json;charset=UTF-8"})
-@PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.CUSTOMER + "')")
-    public ResponseEntity<Order> update(@RequestBody @Validated OrderDto order, @PathVariable("id") Integer id) {
-        return ResponseEntity.ok(orderService.update(id, order));
-    }
-
-    //update the status recovered and paid
     @Operation(summary = "Update an order, only isPaid and isRecovered can be updated.")
     @PutMapping(value = "/{id}/status", consumes = {"application/json"}, produces = {"application/json;charset=UTF-8"})
     @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.CUSTOMER + "')")
@@ -73,49 +65,10 @@ public class OrderController {
         return ResponseEntity.noContent().build();
     }
 
-    //only for ADMIN
-    @Operation(summary = "Get all orders by user id")
-    @GetMapping(value = "/user/{userId}", produces = {"application/json;charset=UTF-8"})
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "')")
-    public ResponseEntity<List<Order>> allByUser(@PathVariable("userId") Integer userId) {
-        return ResponseEntity.ok(orderService.allByUser(userId));
-    }
-
-    @Operation(summary = "Get all orders by user")
-@GetMapping(value = "/user", produces = {"application/json;charset=UTF-8"})
-@PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.CUSTOMER + "')")
-public ResponseEntity<List<Order>> allByUser() {
-        User user = userService.getCurrentUser();
-    return ResponseEntity.ok(orderService.allByUser(user.getId()));
-    }
-
-    @Operation(summary = "Get all orders by seller id")
-    @GetMapping(value = "/seller/{sellerId}", produces = {"application/json;charset=UTF-8"})
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "')")
-    public ResponseEntity<List<Order>> allBySeller(@PathVariable("sellerId") Integer sellerId) {
-        return ResponseEntity.ok(orderService.allBySeller(sellerId));
-    }
-
-    @Operation(summary = "Get all orders by seller")
-    @GetMapping(value = "/seller", produces = {"application/json;charset=UTF-8"})
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.SELLER + "')")
-    public ResponseEntity<List<Order>> allBySeller() {
-        User user = userService.getCurrentUser();
-        return ResponseEntity.ok(orderService.allBySeller(user.getId()));
-    }
-
-    @Operation(summary = "Get all orders by user id and isPaid true")
-    @GetMapping(value = "/user/{userId}/is-paid", produces = {"application/json;charset=UTF-8"})
-    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "')")
-    public ResponseEntity<List<Order>> allByUserAndIsPaid(@PathVariable("userId") Integer userId) {
-        return ResponseEntity.ok(orderService.allByUserAndIsPaidTrue(userId));
-    }
-
     @Operation(summary = "Get all orders by user and isPaid true")
     @GetMapping(value = "/user/is-paid", produces = {"application/json;charset=UTF-8"})
     @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.CUSTOMER + "')")
     public ResponseEntity<List<Order>> allByUserAndIsPaid() {
-        User user = userService.getCurrentUser();
-        return ResponseEntity.ok(orderService.allByUserAndIsPaidTrue(user.getId()));
+        return ResponseEntity.ok(orderService.allByUserAndIsPaidTrue());
     }
 }

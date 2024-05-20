@@ -1,6 +1,7 @@
 package com.ivoriandev.saveursolidaire.models;
 
 import com.ivoriandev.saveursolidaire.models.base.BaseEntity;
+import com.ivoriandev.saveursolidaire.models.listeners.OrderEntityListener;
 import com.ivoriandev.saveursolidaire.utils.enums.order.PaymentMethodEnum;
 import jakarta.persistence.*;
 import lombok.*;
@@ -14,6 +15,7 @@ import org.hibernate.annotations.Where;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
+@EntityListeners(OrderEntityListener.class)
 @Table(name = "orders")
 @SQLDelete(sql = "UPDATE orders SET deleted_at = NOW() WHERE id = ?")
 @Where(clause = "deleted_at IS NULL")
@@ -23,6 +25,9 @@ public class Order extends BaseEntity {
 
     @Column(name = "total_price", nullable = false)
     private Double totalPrice;
+
+    @Column(name = "quantity", nullable = false)
+    private Integer quantity;
 
     @Column(name = "is_paid", nullable = false)
     private Boolean isPaid;
@@ -39,8 +44,8 @@ public class Order extends BaseEntity {
     private User user;
 
     @ManyToOne
-    @JoinColumn(name = "seller_id", nullable = false, referencedColumnName = "id")
-    private User seller;
+    @JoinColumn(name = "store_id", nullable = false, referencedColumnName = "id")
+    private Store store;
 
     @ManyToOne
     @JoinColumn(name = "basket_id", nullable = false, referencedColumnName = "id")
