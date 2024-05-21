@@ -100,6 +100,11 @@ public class OrderService implements CrudService<Order> {
         return orderRepository.findAllByUserIdAndIsPaidTrue(user.getId());
     }
 
+    public List<Order> allByUserAndIsPaidFalse() {
+        User user = userService.getCurrentUser();
+        return orderRepository.findAllByUserIdAndIsPaidFalse(user.getId());
+    }
+
     private String generateReference() {
         Date date = Utilities.getCurrentDate();
         String reference = "REF-" + DateFormatUtils.format(date, "yyyyMMdd");

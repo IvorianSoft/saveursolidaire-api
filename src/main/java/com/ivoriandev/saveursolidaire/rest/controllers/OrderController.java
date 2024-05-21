@@ -71,4 +71,11 @@ public class OrderController {
     public ResponseEntity<List<Order>> allByUserAndIsPaid() {
         return ResponseEntity.ok(orderService.allByUserAndIsPaidTrue());
     }
+
+    @Operation(summary = "Get all orders by user and isPaid false")
+    @GetMapping(value = "/user/is-not-paid", produces = {"application/json;charset=UTF-8"})
+    @PreAuthorize("hasAnyRole('" + AuthoritiesConstants.ADMIN + "', '" + AuthoritiesConstants.CUSTOMER + "')")
+    public ResponseEntity<List<Order>> allByUserAndIsPaidFalse() {
+        return ResponseEntity.ok(orderService.allByUserAndIsPaidFalse());
+    }
 }

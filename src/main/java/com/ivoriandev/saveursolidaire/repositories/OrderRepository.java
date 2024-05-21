@@ -15,5 +15,7 @@ public interface OrderRepository extends JpaRepository<Order, Integer> {
 
     List<Order> findAllByUserIdAndIsPaidTrue(Integer userId);
 
+    List<Order> findAllByUserIdAndIsPaidFalse(Integer userId);
+
     Boolean existsByReference(String reference);
 }

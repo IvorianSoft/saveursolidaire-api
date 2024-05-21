@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonInclude;
 import com.ivoriandev.saveursolidaire.models.Store;
 import com.ivoriandev.saveursolidaire.models.embedded.Location;
 import com.ivoriandev.saveursolidaire.utils.dto.file.FileDto;
+import com.ivoriandev.saveursolidaire.utils.enums.store.StoreCategoryEnum;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -28,6 +29,7 @@ public class StoreDto implements Serializable {
     String name;
     String contact;
     String description;
+    StoreCategoryEnum category;
     FileDto file;
     Boolean isActive;
     Location location;
@@ -41,6 +43,7 @@ public class StoreDto implements Serializable {
                 .name(store.getName())
                 .contact(store.getContact())
                 .description(store.getDescription())
+                .category(store.getCategory())
                 .file(FileDto.from(store.getLogo()))
                 .isActive(store.getIsActive())
                 .location(store.getLocation())
